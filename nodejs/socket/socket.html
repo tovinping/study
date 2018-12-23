@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SOCKET</title>
+</head>
+<body>
+  <div></div>
+  <script src="./socket.io.js" ></script>
+  <script>
+    var client = io.connect('http://localhost:9000')
+    client.on('connect',()=>{
+      console.log('connected')
+      client.send('helloaaaaa')
+    })
+    client.on('news', (data)=>{
+      console.log(data)
+    })
+    setTimeout(() => {
+      client.emit('test', {name: 'tovinping'})
+    }, 1000);
+  </script>
+  <!-- <script>
+    let ws = new WebSocket('ws://127.0.0.1:9000')
+    ws.onopen = function(){
+      ws.send('大渣好，我系渣渣辉')
+    }
+    ws.onmessage = function(event){
+      console.log(event)
+    }
+    ws.onerror = function(err){
+      console.log(err)
+    }
+  </script> -->
+</body>
+</html>
