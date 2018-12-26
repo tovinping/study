@@ -1,32 +1,19 @@
-var net = require('net')
+var Ws = require('ws').Server
+var server = new Ws({port: 9000})
 var clientMap = {}
-var chatServer = net.createServer()
-var i = 0 // 连接名称自增
-chatServer.on('connection', (client)=>{
-    client.name = ++i
-    clientMap[client.name] = client
-
-    client.on('data', (data)=>{
-        data = data.toString()
-        console.log(data)
-        broadcast(data, client)
-    })
-    client.on('error', (err)=>{
-        console.log(err)
-        client.end()
-    })
-    client.on('close', (data)=>{
-        data = data.toString()
-        console.log(data)
-        delete clientMap[client.name]
-        broadcast(client.name+'下线啦', client)
-    })
+var i = 0
+server.on('connection',(ws)=>{
+  ws.name = ++i;
+  clientMap[ws.name] = ws
+  ws.on('message',(msg)=>{
+    sendAll(msg, ws)
+  })
+  ws.on('close',()=>{
+    console.log('close')
+  })
 })
-
-function broadcast (msg, client){
-    for (let key in clientMap) {
-        clientMap[key].write(client.name +'say:' +msg+'\n')
-    }
+function sendAll(msg, ws){
+  for(let key in clientMap){
+    clientMap[key].send(`${ws.name}say:${msg}`)
+  }
 }
-
-chatServer.listen(9000)
