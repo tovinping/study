@@ -2,30 +2,38 @@
   <div>
     <h1>{{initText}}</h1>
     <input type="text" v-model="text">
-    <div>你好吗？</div>
-    <hr>
-    <list></list>
+    <button @click="showAlert">显示自定义弹窗</button>
+    <MyAlert :visible="visible" @close="close" @confirm="confirm"/>
   </div>
 </template>
 <script>
-import List from '@/components/list.vue'
+import MyAlert from '@/components/myAlert/alert'
 export default {
   name: 'home',
   data(){
     return {
-      text: ''
+      text: '',
+      visible: false
     }
   },
-  components:{
-    List
+  components: {
+    MyAlert
   },
   computed:{
     initText(){
       return this.text || '这是首页'
     }
   },
-  mounted(){
-    console.log(this)
+  methods: {
+    showAlert() {
+      this.visible = !this.visible
+    },
+    close() {
+      this.visible = false
+    },
+    confirm() {
+      this.visible = false
+    }
   }
 }
 </script>
