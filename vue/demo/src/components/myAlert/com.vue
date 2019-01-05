@@ -1,35 +1,24 @@
 <template>
-  <div class="my-alert" ref="alert" :style="{display: visible?'block':'none'}">
+  <div class="my-alert">
     <div class="pannel">
       <div class="title">{{title}}</div>
-      <div class="content">{{content}}</div>
+      <div class="content">{{body}}</div>
       <div class="footer">
         <button class="cancel" @click="close">取消</button>
-        <button class="confirm" @click="confirm">确定</button>
+        <button v-if="confirm" class="confirm" @click="ok">确定</button>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: {
-    title: {
-      default: '默认标题'
-    },
-    content: {
-      default: '默认内容'
-    },
-    visible: {
-      default: false
-    }
-  },
-  name: 'myAlert',
   methods: {
     close() {
-      this.$emit('close')
+      document.body.removeChild(this.$el)
     },
-    confirm() {
-      this.$emit('confirm')
+    ok() {
+      document.body.removeChild(this.$el)
+      this.confirm()
     }
   }
 }
@@ -67,5 +56,3 @@ export default {
   right: 10px;
 }
 </style>
-
-
