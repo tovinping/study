@@ -13,3 +13,11 @@ img{
 .page-enter, .page-leave-active {
   opacity: 0;
 }
+button{
+  border: 0;
+  padding: 5px 9px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: blue;
+  cursor: pointer;
+}
