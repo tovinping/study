@@ -1,10 +1,10 @@
-const EventEmiter = require('events')
-var palyer = new EventEmiter()
+const EventEmitter = require('events')
+var player = new EventEmitter()
 
-palyer.on('data',(data)=>{
+player.on('data',(data)=>{
     console.log(data)
 })
 
 setTimeout(() => {
-    palyer.emit('data', {name: 'tovinping'})
+    player.emit('data', {name: 'tovinping'})
 }, 1000);

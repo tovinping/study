@@ -11,7 +11,7 @@ http.createServer((req, res)=>{
       console.log(e)
       router['/404'](req, res)
     } finally {
-        console.log('what happend?')
+        console.log('what happened?')
     }
   }
 }).listen(8000)

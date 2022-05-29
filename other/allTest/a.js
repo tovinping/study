@@ -1,5 +1,0 @@
-console.log('tangwenping')
-console.log('test')
-console.log('tangwenping')
-console.log('tovinping')
-var a = document.getElementById('aaa')
