@@ -5,7 +5,7 @@ var host = '127.0.0.1'
 var client = new net.Socket()
 client.setEncoding = 'UTF-8'
 client.connect(port, host, ()=>{
-  client.write('上线了')
+  client.write('我上线了')
 })
 client.on('data', (data)=>{
   console.log(data.toString())

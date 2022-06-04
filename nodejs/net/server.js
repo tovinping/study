@@ -8,16 +8,14 @@ chatServer.on('connection', (client)=>{
 
     client.on('data', (data)=>{
         data = data.toString()
-        console.log(data)
         broadcast(data, client)
     })
     client.on('error', (err)=>{
-        console.log(err)
+        console.log('error=', err)
         client.end()
     })
-    client.on('close', (data)=>{
-        data = data.toString()
-        console.log(data)
+    client.on('close', (...rest)=>{
+        console.log('close=', rest)
         delete clientMap[client.name]
         broadcast(client.name+'下线啦', client)
     })
@@ -29,4 +27,4 @@ function broadcast (msg, client){
     }
 }
 
-chatServer.listen(9000)
+chatServer.listen(9000, 'localhost')
