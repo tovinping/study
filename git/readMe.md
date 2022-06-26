@@ -7,5 +7,8 @@
 ## add后怎么回退
 1. git reset [file]
 
-# 本地文件修改后还没有add怎么回退
+## 本地文件修改后还没有add怎么回退
 1. git checkout [file]
+
+## 查看其它分支日志
+1. git log [branch_name]
