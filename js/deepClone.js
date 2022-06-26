@@ -52,4 +52,4 @@ function testFn() {
   console.log('testFn=', this.name)
 }
 testFn.myCall({name: 'aaaaa'})
-testFn();
+testFn()
