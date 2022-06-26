@@ -2,6 +2,7 @@
 
 ## commit后怎么回退
 1. git reset [commitId]
+2. git reset --soft head^ // --soft保存更改内容(新增文件不会删除),--hard完全回退代码(新增文件也会删除)
 
 ## add后怎么回退
 1. git reset [file]
