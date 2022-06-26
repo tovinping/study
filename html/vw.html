@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    #box {
+      width: 100%;
+      height: 200px;
+      border: 1px solid blue;
+    }
+    .per {
+      width: 50%;
+      background-color: red;
+    }
+    .vw {
+      width: 50vw;
+      background-color: pink;
+    }
+    .per,.vw {
+      height: 50px;
+    }
+    #box span{
+      padding: 0 20px;
+    }
+    #box span:nth-of-type(2){
+      position: relative;
+      left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <div class="per"></div>
+    <div class="vw"></div>
+    <span>1</span><span>2</span><span>3</span>
+  </div>
+  <script>
+    console.log(name)
+    let name = 'MMMM'
+  </script>
+</body>
+</html>
