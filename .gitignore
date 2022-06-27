@@ -5,4 +5,7 @@ testignore/
 .DS_Store
 node_modules/
 dist/
+download/
+cache/
+config.json
 *.log
