@@ -6,5 +6,5 @@ export default function AComponent() {
   function testClick() {
     dispatch({type: ''})
   }
-  return <div>tangwenping{count}<button onClick={testClick}>testClick</button></div>
+  return <div>tangwenping{count}<button onClick={testClick}>testClick123</button></div>
 }

@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import {info} from './Components/Dialog'
+// import {info} from './Components/Dialog'
 import {message} from 'antd'
 import AComponent from './A'
 import './App.css';
@@ -26,7 +26,7 @@ function App() {
           Learn React
         </a>
         {/* <AComponent /> */}
-        <button onClick={handClick}>showDialog</button>
+        <button onClick={handClick}>showDialog123</button>
       </header>
     </div>
   );

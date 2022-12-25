@@ -15,3 +15,30 @@ export function downloadFile(url: string, savePath: string) {
     }
   })
 }
+const queue: Array<{url: string; savePath: string; resolve: (data: any) => void}> = []
+let doingSize = 0
+export async function optimizationDownload(url: string, savePath: string) {
+  if (doingSize > 5) {
+    return new Promise<any>(resolve => {
+      queue.push({url, savePath, resolve})
+    })
+  } else {
+    doingSize++
+    return downloadFile(url, savePath).then(result => {
+      doingSize--
+      const data = queue.pop()
+      if (!data) return result;
+      optimizationDownload(data.url, data.savePath).then(data.resolve)
+      return result
+    })
+  }
+
+  // requestMap.set(url, true)
+  // if (requestMap.size < 5) {
+    
+  // } else {
+    
+  // }
+  // requestMap.delete(url)
+
+}

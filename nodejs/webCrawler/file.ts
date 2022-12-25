@@ -4,17 +4,15 @@ import path from 'path'
 const DOWNLOAD_DIR = 'download'
 const CACHE_DIR = 'cache'
 function getUriName(uri: string) {
-  if (uri.includes('.')) {
-    return uri.split('.')[0] + '.txt'
-  }
-  return uri + '.txt'
+  const [th, id] = uri.split('-')
+  return `${th}-${id}-1-1.txt`
 }
 export function fileExist(filePath: string) {
   return fs.existsSync(filePath)
 }
 export function getDirNameByUri(uri: string) {
-  const dir = uri.split('/').pop()?.split('.')[0]
-  return dir || uri
+  const [th, id] = uri.split('-')
+  return `${th}-${id}-1-1` || uri
 }
 export function getFileNameByUri(uri: string) {
   return uri.split('/').pop() || uri
@@ -44,19 +42,20 @@ export function createDataDir(uri: string) {
     fs.mkdirSync(dirPath)
   }
 }
-export function saveWebContent(content: string, name: string) {
-  const fileName = getUriName(name)
+export function saveWebContent(content: string, uri: string) {
+  const fileName = getUriName(uri)
   const filePath = path.resolve(CACHE_DIR, fileName)
   fs.writeFileSync(filePath, content)
 }
-export function getWebContent(name: string) {
-  const fileName = getUriName(name)
+export function getWebContent(uri: string) {
+  const fileName = getUriName(uri)
   const filePath = path.resolve(CACHE_DIR, fileName)
   try {
     const result = fs.readFileSync(filePath)
+    console.log('从缓存获取=', uri)
     return result ? result.toString() : ''
   } catch (error: any) {
-    console.error('error', error.toString())
+    console.error('从未下载过=', error.message)
     return ''  
   }
 }

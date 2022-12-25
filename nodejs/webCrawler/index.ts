@@ -1,41 +1,41 @@
 import * as cheerio from 'cheerio'
 import config from './config.json' assert { type: "json" }
-import { downloadFile } from './download.js'
+import { downloadFile, optimizationDownload } from './download.js'
 import { createDataDir, fileExist, getSavePath, getWebContent, saveWebContent } from './file.js'
 function requestWebContent(uri: string) {
   const url = config.domain + uri
   console.log('requestWebContent=', url)
   return fetch(url).then(res => res.text())
 }
-async function getContent(uri: string) {
-  return getWebContent(uri) || requestWebContent(uri)
-}
-async function listContent(uri: string) {
-  const webContent = await getContent(uri)
+async function autoGetDetailContent(uri: string) {
+  const webContent = getWebContent(uri) || await requestWebContent(uri)
   saveWebContent(webContent, uri)
+  return webContent;
+}
+async function getPageDataList(uri: string) {
+  const webContent = await requestWebContent(uri)
   const $ = cheerio.load(webContent)
   const domList = $('tbody th em')
   const dataList: Array<{title: string; uri: string}> = []
   const skipFlag: Array<{title: string; uri: string}> = []
   domList.each(function(){
-    const flag = $(this).text().replace(/[\[\]]/g, '')
-    const inKeyWords = config.keyWords.includes(flag)
-    const uri = $(this).next().attr('href') || ''
-    const title = $(this).next().text()
-    if (flag && inKeyWords && uri) {
+    const flag = $(this).text().replace(/[\[\]]/g, '');
+    const include = config.include.includes(flag);
+    const uri = $(this).next().attr('href') || '';
+    const title = $(this).next().text().toUpperCase();
+    const exclude = config.exclude.some(item => title.includes(item));
+    if (flag && include && uri && !exclude) {
       dataList.push({title, uri})
     } else {
       skipFlag.push({title, uri})
     }
   })
-  console.log('skip data=', skipFlag.length)
+  console.log('skip length=', skipFlag.length, 'download length=', dataList.length)
   return dataList
 }
 
-async function detailContent(uri: string) {
-  const webContent = await getContent(uri)
-  saveWebContent(webContent, uri)
-  saveWebContent(webContent, uri)
+async function detailContent(uri: string, title: string) {
+  const webContent = await autoGetDetailContent(uri)
   const $ = cheerio.load(webContent)
   const domList = $('tbody img')
   const imgUrlList: string[] = []
@@ -44,36 +44,37 @@ async function detailContent(uri: string) {
     imgUrl && imgUrlList.push(imgUrl)
   })
   const webTitle = $('#thread_subject').text()
-  console.log(`${webTitle} >>> 共发现${imgUrlList.length}张图片, url=${config.domain}${uri}`);
-  if (!imgUrlList.length) {
-    return
+  if (imgUrlList.length) {
+    console.log(`${imgUrlList.length}张图片 >>> title= ${webTitle} >>> url=${config.domain}${uri}`);
+  } else {
+    console.log(`<<<<< 0张图片 >>> title= ${title} >>> url= ${config.domain}${uri}`)
+    return;
   }
   createDataDir(uri)
-  let i = 1;
+  let count = 0
   for (const imgUrl of imgUrlList) {
     const savePath = getSavePath(uri, imgUrl)
     if (!savePath) {
-      console.error('图片路径获取失败', imgUrl);
-      i++
+      console.error('---------------------------图片路径获取失败', imgUrl);
       continue
     }
     const isExist = fileExist(savePath)
     if (isExist) {
-      console.log(`第${i}张图已经存在`);
-      i++
       continue;
     }
-    console.log(`开始下载第${i}张图片`);
-    await downloadFile(imgUrl, savePath)
-    i++
+    optimizationDownload(imgUrl, savePath).then(() => {
+      ++count
+      console.log(`url=${config.domain}${uri} ${count}/${imgUrlList.length}`)
+      if (count === imgUrlList.length) {
+        console.log(`${webTitle} url=${config.domain}${uri} >>>>>下载完成<<<<<`)
+      }
+    })
   }
-  console.log(`#####################   ${uri}下所有图片下载完成   ############################`);
 }
 async function main() {
-  const list = await listContent(config.uri)
-  console.log('LIST = ', list.length);
+  const list = await getPageDataList(config.uri)
   for (const item of list) {
-    await detailContent(item.uri)
+    detailContent(item.uri, item.title)
   }
 }
 main()
