@@ -7,5 +7,6 @@ node_modules/
 dist/
 download/
 cache/
+crashDumps/
 config.json
 *.log
