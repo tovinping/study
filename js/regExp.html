@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RegExp</title>
+</head>
+
+<body>
+  <div>Reg</div>
+  <script>
+    const htmlStr = '<div class="box"><h1>标题</h1><p>P内容</p><span>QQQ</span><a>链接</a></div>'
+    const result = htmlStr.match(/<\/?[a-z]\w*>/ig)
+    console.log(result)
+    const msg = '我最喜欢的书：《黄金时代》、《沉默是金》和《三体》'
+    const msgResult = msg.match(/《.+?》/g)
+    console.log(msgResult)
+    const htmlRes = htmlStr.replace(/<[^>]*>/g, '')
+    console.log(htmlRes)
+    const pContent = htmlStr.matchAll(/<p>(.+?)<\/p>/g)
+    for (const iterator of pContent) {
+      console.log(iterator)
+    }
+  </script>
+</body>
+
+</html>

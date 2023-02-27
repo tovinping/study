@@ -11,7 +11,7 @@
 
 <body>
   <div>
-    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <canvas id="myCanvas" width="512" height="512"></canvas>
   </div>
   <script>
     let webgl;
@@ -20,7 +20,7 @@
         attribute vec4 a_position;
         uniform     mat4    proj;
         void main(void){
-            gl_Position =proj *  a_position;
+            gl_Position = a_position;
             gl_PointSize=60.0;
         }
         `;
@@ -66,11 +66,33 @@
       webgl.vertexAttrib4fv(aPosition, pointPosition)
       let uniForProJ = webgl.getUniformLocation(webgl.program, 'proj')
       webgl.uniformMatrix4fv(uniForProJ, false, projMat4)
+      const points = []
+      document.addEventListener('click', (event) => {
+        let x = event.clientX
+        let y = event.clientY
+        let rect = event.target.getBoundingClientRect();
+        let top = rect.top;
+        let left = rect.left;
+        let pointX = ((x-left)-256) / 256
+        let pointY = -((y-top)-256) /256
+        points.push(pointX)
+        points.push(pointY)
+        points.push(0)
+        points.push(1.0)
+        let pointPosition = new Float32Array(points)
+        let pointBuffer = webgl.createBuffer();
+        webgl.bindBuffer(webgl.ARRAY_BUFFER, pointBuffer)
+        webgl.bufferData(webgl.ARRAY_BUFFER, pointPosition, webgl.STATIC_DRAW);
+        webgl.enableVertexAttribArray(aPosition);
+        webgl.vertexAttribPointer(aPosition, 4, webgl.FLOAT, false, 4*4, 0*4)
+        draw(points.length)
+      })
+
     }
-    function draw() {
+    function draw(length = 1) {
       webgl.clearColor(0.0, 0.0, 0.0, 1.0)
       webgl.clear(webgl.COLOR_BUFFER_BIT | webgl.DEPTH_BUFFER_BIT);
-      webgl.drawArrays(webgl.POINTS, 0, 1)
+      webgl.drawArrays(webgl.POINTS, 0, length)
     }
     init()
   </script>
